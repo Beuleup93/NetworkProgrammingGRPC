@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package authentification;
+
+option java_package = "com.proto.authentification";
+option java_multiple_files = true;
+
+message Paire {
+  string login = 1 ;
+  string pwd = 2 ;
+}
+
+enum ServerResponse{
+  GOOD = 0 ;
+  BAD = 1 ;
+  DONE = 2 ;
+  ERROR = 3 ;
+}
+
+enum TypeRequete{
+  CHK = 0 ;
+  ADD = 1 ;
+  DEL = 2 ;
+  MOD = 3 ;
+}
+
+message LogRequest{
+  TypeRequete type = 1 ;
+  Paire paire = 2 ;
+  ServerResponse response = 3 ;
+  string date = 4;
+  string port = 5 ;
+  string ip = 6;
+}
+
+message GResponse {
+  ServerResponse response = 1 ;
+}
+
+message GetLogRequest{
+  optional Paire paire = 1;
+  optional TypeRequete type = 2;
+  optional ServerResponse response = 3;
+}
+
+service ASChecker {
+  rpc ckeck(Paire) returns (GResponse){};
+}
+
+service ASManager{
+  rpc add(Paire) returns(GResponse){};
+  rpc delete(Paire) returns(GResponse){};
+  rpc update(Paire) returns (GResponse){};
+  rpc chk(Paire) returns(GResponse){};
+}
+
+service LoggingService{
+  rpc log(LogRequest) returns (google.protobuf.Empty){}
+  rpc get(GetLogRequest) returns (stream LogRequest) {}
+}
+
+
+
+
+
+
